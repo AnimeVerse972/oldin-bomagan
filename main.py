@@ -105,22 +105,23 @@ async def handle_code(message: types.Message):
         channel = info["channel"]
         msg_id = info["message_id"]
 
-     # 1️⃣ Postni kanalizdan nusxa qilib yuboring
-await bot.copy_message(
-    chat_id=message.chat.id,
-    from_chat_id=channel,
-    message_id=msg_id
-)
+        # 1️⃣ Postni nusxalash
+        await bot.copy_message(
+            chat_id=message.chat.id,
+            from_chat_id=channel,
+            message_id=msg_id
+        )
 
-# 2️⃣ Keyin alohida tugmali xabar yuboring
-keyboard = InlineKeyboardMarkup().add(
-    InlineKeyboardButton(
-        text="📥 Yuklab olish",
-        url=f"https://t.me/{channel.strip('@')}/{msg_id}"
-    )
-)
+        # 2️⃣ Tugma yuborish
+        keyboard = InlineKeyboardMarkup().add(
+            InlineKeyboardButton(
+                text="📥 Yuklab olish",
+                url=f"https://t.me/{channel.strip('@')}/{msg_id}"
+            )
+        )
 
-await message.answer("⬇️ Yuklab olish tugmasi:", reply_markup=keyboard)
+        await message.answer("⬇️ Yuklab olish tugmasi:", reply_markup=keyboard)
+
     else:
         await message.answer("❌ Bunday kod topilmadi. Iltimos, to‘g‘ri kod yuboring.")
 
