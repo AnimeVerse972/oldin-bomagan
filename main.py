@@ -106,20 +106,25 @@ async def handle_code(message: types.Message):
             message_id = post['message_id']
             post_url = f"https://t.me/{channel_username}/{message_id}"
 
-            # 📎 Inline tugma
+            # 1️⃣ Postni nusxa qilib yuborish
+            await bot.copy_message(
+                chat_id=message.chat.id,
+                from_chat_id=post['channel'],
+                message_id=post['message_id']
+            )
+
+            # 2️⃣ Tugmali xabar yuborish
             buttons = types.InlineKeyboardMarkup().add(
                 types.InlineKeyboardButton("📥 Yuklab olish", url=post_url)
             )
 
-            # 📝 Javob xabari
             await message.answer(
-                text=f"🎬 Kod: *{code}*\nPostni ko‘rish uchun tugmani bosing:",
-                reply_markup=buttons,
-                parse_mode="Markdown"
+                text="⬇️ Quyidagi tugmani bosib postga o‘ting:",
+                reply_markup=buttons
             )
 
         except Exception as e:
-            await message.answer("⚠️ Kod topildi, lekin tugmani yuborib bo‘lmadi.")
+            await message.answer("⚠️ Kod topildi, lekin postni yuborib bo‘lmadi.")
             print(f"[Xatolik] {e}")
     else:
         await message.answer("❌ Bunday kod topilmadi.")
