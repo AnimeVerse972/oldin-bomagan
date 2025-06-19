@@ -2,6 +2,7 @@ from aiogram import Bot, Dispatcher, executor, types
 from dotenv import load_dotenv
 import os
 import logging
+from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from keep_alive import keep_alive
 
 load_dotenv()
@@ -104,14 +105,22 @@ async def handle_code(message: types.Message):
         channel = info["channel"]
         msg_id = info["message_id"]
 
-        await bot.copy_message(
-            chat_id=message.chat.id,
-            from_chat_id=channel,
-            message_id=msg_id,
-            reply_markup=InlineKeyboardMarkup(inline_keyboard=[[
-                InlineKeyboardButton(text="📥 Yuklab olish", url=f"https://t.me/{channel.strip('@')}/{msg_id}")
-            ]])
-        )
+     # 1️⃣ Postni kanalizdan nusxa qilib yuboring
+await bot.copy_message(
+    chat_id=message.chat.id,
+    from_chat_id=channel,
+    message_id=msg_id
+)
+
+# 2️⃣ Keyin alohida tugmali xabar yuboring
+keyboard = InlineKeyboardMarkup().add(
+    InlineKeyboardButton(
+        text="📥 Yuklab olish",
+        url=f"https://t.me/{channel.strip('@')}/{msg_id}"
+    )
+)
+
+await message.answer("⬇️ Yuklab olish tugmasi:", reply_markup=keyboard)
     else:
         await message.answer("❌ Bunday kod topilmadi. Iltimos, to‘g‘ri kod yuboring.")
 
