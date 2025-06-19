@@ -106,20 +106,21 @@ async def handle_code(message: types.Message):
             message_id = post['message_id']
             post_url = f"https://t.me/{channel_username}/{message_id}"
 
-            # 1️⃣ Postni nusxa qilib yuborish
+            # 1️⃣ Postni kanaldan nusxalab yuborish
             await bot.copy_message(
                 chat_id=message.chat.id,
                 from_chat_id=post['channel'],
-                message_id=post['message_id']
+                message_id=message_id
             )
 
-            # 2️⃣ Tugmali xabar yuborish
+            # 2️⃣ Tugmani alohida xabar sifatida yuborish (matnsiz)
             buttons = types.InlineKeyboardMarkup().add(
                 types.InlineKeyboardButton("📥 Yuklab olish", url=post_url)
             )
 
-            await message.answer(
-                text="⬇️ Quyidagi tugmani bosib postga o‘ting:",
+            await bot.send_message(
+                chat_id=message.chat.id,
+                text="⠀",  # Bu bo‘sh joy belgisi, foydalanuvchiga hech narsa ko‘rinmaydi
                 reply_markup=buttons
             )
 
@@ -128,7 +129,6 @@ async def handle_code(message: types.Message):
             print(f"[Xatolik] {e}")
     else:
         await message.answer("❌ Bunday kod topilmadi.")
-
 
 # 🟢 Botni ishga tushuramiz
 if __name__ == '__main__':
