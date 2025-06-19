@@ -134,16 +134,11 @@ async def handle_code(message: types.Message):
         await bot.copy_message(
             chat_id=message.chat.id,
             from_chat_id=channel,
-            message_id=msg_id
+            message_id=msg_id,
+            reply_markup=InlineKeyboardMarkup(inline_keyboard=[[
+                InlineKeyboardButton(text="📥 Yuklab olish", url=f"https://t.me/{channel.strip('@')}/{msg_id}")
+            ]])
         )
-
-        keyboard = InlineKeyboardMarkup().add(
-            InlineKeyboardButton(
-                text="📥 Yuklab olish",
-                url=f"https://t.me/{channel.strip('@')}/{msg_id}"
-            )
-        )
-        await message.answer("⬇️ Yuklab olish tugmasi:", reply_markup=keyboard)
     else:
         await message.answer("❌ Bunday kod topilmadi. Iltimos, to‘g‘ri kod yuboring.")
 
