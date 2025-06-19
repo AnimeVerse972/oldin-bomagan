@@ -2,11 +2,14 @@ import logging
 from aiogram import Bot, Dispatcher, executor, types
 from dotenv import load_dotenv
 import os
+from keep_alive import keep_alive
 
 load_dotenv()
 
 API_TOKEN = os.getenv("API_TOKEN")
 CHANNEL_USERNAME = os.getenv("CHANNEL_USERNAME")
+
+keep_alive()
 
 logging.basicConfig(level=logging.INFO)
 bot = Bot(token=API_TOKEN)
