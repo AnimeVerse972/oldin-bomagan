@@ -100,7 +100,7 @@ async def handle_code(message: types.Message):
         await message.answer("❗ Koddan foydalanish uchun avval kanalga obuna bo‘ling.")
         return
 
-      if code in anime_posts:
+    if code in anime_posts:  # <== Bu yer endi to'g'ri
         info = anime_posts[code]
         channel = info["channel"]
         msg_id = info["message_id"]
@@ -115,6 +115,7 @@ async def handle_code(message: types.Message):
         )
     else:
         await message.answer("❌ Bunday kod topilmadi. Iltimos, to‘g‘ri kod yuboring.")
+
 
 
 # 🟢 Botni ishga tushuramiz
