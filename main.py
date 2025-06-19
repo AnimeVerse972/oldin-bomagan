@@ -107,7 +107,7 @@ async def reklama_handler(message: types.Message):
 # 💼 Homiylik
 @dp.message_handler(lambda m: m.text == "💼 Homiylik")
 async def homiy_handler(message: types.Message):
-    await message.answer("Homiylik uchun karta: 8800904257677885")
+    await message.answer("Homiylik uchun karta: **8800904257677885**")
 
 # 🛠 Admin panel
 @dp.message_handler(lambda m: m.text == "🛠 Admin panel")
