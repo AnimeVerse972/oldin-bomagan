@@ -16,6 +16,9 @@ dp = Dispatcher(bot)
 
 keep_alive()
 
+# ✅ Adminlar
+ADMINS = [6486825926, 7575041003]
+
 # ✅ Kod -> Kanal va message_id ma’lumotlari
 anime_posts = {
     "1": {"channel": "@AniVerseClip", "message_id": 10},
@@ -76,10 +79,15 @@ async def is_user_subscribed(user_id: int):
 @dp.message_handler(commands=['start'])
 async def start_handler(message: types.Message):
     if await is_user_subscribed(message.from_user.id):
-        await message.answer("✅ Obuna bor. Kodni yuboring:")
+        buttons = [[KeyboardButton(text="📢 Reklama"), KeyboardButton(text="💼 Homiylik")]]
+        if message.from_user.id in ADMINS:
+            buttons.append([KeyboardButton(text="🛠 Admin panel")])
+
+        markup = ReplyKeyboardMarkup(keyboard=buttons, resize_keyboard=True)
+        await message.answer("✅ Obuna bor. Kodni yuboring:", reply_markup=markup)
     else:
         markup = types.InlineKeyboardMarkup().add(
-            types.InlineKeyboardButton("📢 Obuna bo‘lish", url=f"https://t.me/{CHANNEL_USERNAME.lstrip('@')}"),
+            types.InlineKeyboardButton("Kanal", url=f"https://t.me/{CHANNEL_USERNAME.lstrip('@')}"),
             types.InlineKeyboardButton("✅ Tekshirish", callback_data="check_sub")
         )
         await message.answer("❗ Iltimos, kanalga obuna bo‘ling:", reply_markup=markup)
@@ -91,6 +99,24 @@ async def check_subscription(callback_query: types.CallbackQuery):
     else:
         await callback_query.answer("❗ Hali ham obuna emassiz!", show_alert=True)
 
+# 📢 Reklama
+@dp.message_handler(lambda m: m.text == "📢 Reklama")
+async def reklama_handler(message: types.Message):
+    await message.answer("Reklama uchun: @DiyorbekPTMA")
+
+# 💼 Homiylik
+@dp.message_handler(lambda m: m.text == "💼 Homiylik")
+async def homiy_handler(message: types.Message):
+    await message.answer("Homiylik uchun karta: 8800904257677885")
+
+# 🛠 Admin panel
+@dp.message_handler(lambda m: m.text == "🛠 Admin panel")
+async def admin_handler(message: types.Message):
+    if message.from_user.id in ADMINS:
+        await message.answer("👮‍♂️ Admin paneliga xush kelibsiz!")
+    else:
+        await message.answer("⛔ Siz admin emassiz!")
+
 # 💬 Kod yuborilsa — kanal postini link orqali chiqarish va tugma bilan
 @dp.message_handler(lambda msg: msg.text.strip().isdigit())
 async def handle_code(message: types.Message):
@@ -100,7 +126,7 @@ async def handle_code(message: types.Message):
         await message.answer("❗ Koddan foydalanish uchun avval kanalga obuna bo‘ling.")
         return
 
-    if code in anime_posts:  # <== Bu yer endi to'g'ri
+    if code in anime_posts:
         info = anime_posts[code]
         channel = info["channel"]
         msg_id = info["message_id"]
@@ -108,15 +134,18 @@ async def handle_code(message: types.Message):
         await bot.copy_message(
             chat_id=message.chat.id,
             from_chat_id=channel,
-            message_id=msg_id,
-            reply_markup=InlineKeyboardMarkup(inline_keyboard=[[
-                InlineKeyboardButton(text="📥 Yuklab olish", url=f"https://t.me/{channel.strip('@')}/{msg_id}")
-            ]])
+            message_id=msg_id
         )
+
+        keyboard = InlineKeyboardMarkup().add(
+            InlineKeyboardButton(
+                text="📥 Yuklab olish",
+                url=f"https://t.me/{channel.strip('@')}/{msg_id}"
+            )
+        )
+        await message.answer("⬇️ Yuklab olish tugmasi:", reply_markup=keyboard)
     else:
         await message.answer("❌ Bunday kod topilmadi. Iltimos, to‘g‘ri kod yuboring.")
-
-
 
 # 🟢 Botni ishga tushuramiz
 if __name__ == '__main__':
