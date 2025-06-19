@@ -113,22 +113,23 @@ async def handle_code(message: types.Message):
                 message_id=message_id
             )
 
-            # 2️⃣ Tugmani alohida xabar sifatida yuborish (matnsiz)
+            # 2️⃣ Tugmani alohida xabar sifatida yuborish (matn bilan)
             buttons = types.InlineKeyboardMarkup().add(
                 types.InlineKeyboardButton("📥 Yuklab olish", url=post_url)
             )
 
-          await bot.send_message(
-    chat_id=message.chat.id,
-    text="⬇️ Yuklab olish tugmasi:",
-    reply_markup=buttons
-)
+            await bot.send_message(
+                chat_id=message.chat.id,
+                text="⬇️ Yuklab olish tugmasi:",
+                reply_markup=buttons
+            )
 
         except Exception as e:
             await message.answer("⚠️ Kod topildi, lekin postni yuborib bo‘lmadi.")
             print(f"[Xatolik] {e}")
     else:
         await message.answer("❌ Bunday kod topilmadi.")
+
 
 # 🟢 Botni ishga tushuramiz
 if __name__ == '__main__':
