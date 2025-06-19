@@ -90,7 +90,7 @@ async def check_subscription(callback_query: types.CallbackQuery):
     else:
         await callback_query.answer("❗ Hali ham obuna emassiz!", show_alert=True)
 
-# 💬 Kod yuborilsa — kanal postini chiqarish
+# 💬 Kod yuborilsa — kanal postini link orqali chiqarish va tugma bilan
 @dp.message_handler(lambda msg: msg.text.strip().isdigit())
 async def handle_code(message: types.Message):
     code = message.text.strip()
@@ -102,16 +102,28 @@ async def handle_code(message: types.Message):
     if code in anime_posts:
         try:
             post = anime_posts[code]
-            await bot.copy_message(
-                chat_id=message.chat.id,
-                from_chat_id=post['channel'],
-                message_id=post['message_id']
+            channel_username = post['channel'].lstrip('@')
+            message_id = post['message_id']
+            post_url = f"https://t.me/{channel_username}/{message_id}"
+
+            # 📎 Inline tugma
+            buttons = types.InlineKeyboardMarkup().add(
+                types.InlineKeyboardButton("📥 Yuklab olish", url=post_url)
             )
+
+            # 📝 Javob xabari
+            await message.answer(
+                text=f"🎬 Kod: *{code}*\nPostni ko‘rish uchun tugmani bosing:",
+                reply_markup=buttons,
+                parse_mode="Markdown"
+            )
+
         except Exception as e:
-            await message.answer("⚠️ Kod topildi, lekin postni yuborib bo‘lmadi.")
+            await message.answer("⚠️ Kod topildi, lekin tugmani yuborib bo‘lmadi.")
             print(f"[Xatolik] {e}")
     else:
         await message.answer("❌ Bunday kod topilmadi.")
+
 
 # 🟢 Botni ishga tushuramiz
 if __name__ == '__main__':
