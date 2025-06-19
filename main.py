@@ -100,35 +100,20 @@ async def handle_code(message: types.Message):
         return
 
     if code in anime_posts:
-        try:
-            post = anime_posts[code]
-            channel_username = post['channel'].lstrip('@')
-            message_id = post['message_id']
-            post_url = f"https://t.me/{channel_username}/{message_id}"
+        info = anime_posts[code]
+        channel = info["channel"]
+        msg_id = info["message_id"]
 
-            # 1️⃣ Postni kanaldan nusxalab yuborish
-            await bot.copy_message(
-                chat_id=message.chat.id,
-                from_chat_id=post['channel'],
-                message_id=message_id
-            )
-
-            # 2️⃣ Tugmani alohida xabar sifatida yuborish (matn bilan)
-            buttons = types.InlineKeyboardMarkup().add(
-                types.InlineKeyboardButton("📥 Yuklab olish", url=post_url)
-            )
-
-            await bot.send_message(
-                chat_id=message.chat.id,
-                text="⬇️ Yuklab olish tugmasi:",
-                reply_markup=buttons
-            )
-
-        except Exception as e:
-            await message.answer("⚠️ Kod topildi, lekin postni yuborib bo‘lmadi.")
-            print(f"[Xatolik] {e}")
+        await bot.copy_message(
+            chat_id=message.chat.id,
+            from_chat_id=channel,
+            message_id=msg_id,
+            reply_markup=InlineKeyboardMarkup(inline_keyboard=[[
+                InlineKeyboardButton(text="📥 Yuklab olish", url=f"https://t.me/{channel.strip('@')}/{msg_id}")
+            ]])
+        )
     else:
-        await message.answer("❌ Bunday kod topilmadi.")
+        await message.answer("❌ Bunday kod topilmadi. Iltimos, to‘g‘ri kod yuboring.")
 
 
 # 🟢 Botni ishga tushuramiz
