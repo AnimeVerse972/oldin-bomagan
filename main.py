@@ -118,11 +118,11 @@ async def handle_code(message: types.Message):
                 types.InlineKeyboardButton("📥 Yuklab olish", url=post_url)
             )
 
-            await bot.send_message(
-                chat_id=message.chat.id,
-                text="⠀",  # Bu bo‘sh joy belgisi, foydalanuvchiga hech narsa ko‘rinmaydi
-                reply_markup=buttons
-            )
+          await bot.send_message(
+    chat_id=message.chat.id,
+    text="⬇️ Yuklab olish tugmasi:",
+    reply_markup=buttons
+)
 
         except Exception as e:
             await message.answer("⚠️ Kod topildi, lekin postni yuborib bo‘lmadi.")
